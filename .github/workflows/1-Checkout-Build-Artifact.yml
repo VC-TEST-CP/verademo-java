@@ -33,7 +33,7 @@ jobs:
           createprofile: true
           version: '${{ github.run_id }}'
           criticality: High
-          filepath: '../app/target/verademo.war'
+          filepath: 'app/target/verademo.war'
           vid: '${{ secrets.VERACODE_API_ID }}'
           vkey: '${{ secrets.VERACODE_API_KEY }}'
           teams: 'ClintPollock-DemoApps2023'
@@ -50,7 +50,7 @@ jobs:
           sandboxname: DailyBuild
           version: '${{ github.run_id }}'
           criticality: High
-          filepath: '../app/target/verademo.war'
+          filepath: 'app/target/verademo.war'
           vid: '${{ secrets.VERACODE_API_ID }}'
           vkey: '${{ secrets.VERACODE_API_KEY }}'
           teams: 'ClintPollock-DemoApps2023'
