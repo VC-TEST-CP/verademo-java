@@ -29,11 +29,11 @@ jobs:
         uses: veracode/veracode-uploadandscan-action@master
         id: upload_and_scan_policy
         with:
-          appname: 'VeraJava-GitHub'
+          appname: 'VeraDemoJava-GitHub'
           createprofile: true
           version: '${{ github.run_id }}'
           criticality: High
-          filepath: 'verademo.war'
+          filepath: '../app/target/verademo.war'
           vid: '${{ secrets.VERACODE_API_ID }}'
           vkey: '${{ secrets.VERACODE_API_KEY }}'
           teams: 'ClintPollock-DemoApps2023'
@@ -44,13 +44,13 @@ jobs:
         uses: veracode/veracode-uploadandscan-action@master
         id: upload_and_scan_sandbox
         with:
-          appname: 'VeraJava-GitHub'
+          appname: 'VeraDemoJava-GitHub'
           createprofile: false
           createsandbox: true
           sandboxname: DailyBuild
           version: '${{ github.run_id }}'
           criticality: High
-          filepath: 'verademo.war'
+          filepath: '../app/target/verademo.war'
           vid: '${{ secrets.VERACODE_API_ID }}'
           vkey: '${{ secrets.VERACODE_API_KEY }}'
           teams: 'ClintPollock-DemoApps2023'
@@ -66,7 +66,7 @@ jobs:
           SRCCLR_API_TOKEN: ${{ secrets.SRCCLR_API_TOKEN }}
         run: curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --image veracodedemolabs/verademo-java-github:latest --json=SCA-Container-Results-${{ github.run_id }}.json
  
- # Workflow to run DAST Scan against QA server.  We use the veracode/api-signing image for this.
+# Workflow to run DAST Scan against QA server. 
   Submit-DAST-Scan:
     runs-on: ubuntu-latest
     steps:            
