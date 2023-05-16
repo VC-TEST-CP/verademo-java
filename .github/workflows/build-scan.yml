@@ -66,6 +66,7 @@ jobs:
          -filepath app/target/verademo.war
         continue-on-error: true
 
+#--------------------------------------------------------------------------
 # Use SCA Agent to scan repo and container
   SCA-Agent-Scan:
     runs-on: ubuntu-latest
@@ -83,7 +84,8 @@ jobs:
         env: 
           SRCCLR_API_TOKEN: ${{ secrets.SRCCLR_API_TOKEN }}
         run: curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan --image veracodedemolabs/verademo-java-github:latest --json=SCA-Container-Results-${{ github.run_id }}.json
- 
+
+#-------------------------------------------------------------------------- 
 # Workflow to run DAST Scan against QA server. 
   Submit-DAST-Scan:
     runs-on: ubuntu-latest
@@ -109,3 +111,24 @@ jobs:
          export VERACODE_API_KEY_ID=${{ secrets.VERACODE_API_ID }}
          export VERACODE_API_KEY_SECRET=${{ secrets.VERACODE_API_KEY }}
          http --verbose --auth-type=veracode_hmac POST "https://api.veracode.com/was/configservice/v1/analyses?job_options=run_verification=false" < vc-dast-config.json
+#--------------------------------------------------------------------------
+# Use Veracode CLI to inspect app and container
+  Container-Inspection-SBOM:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Veracode Container Scanner
+        run: |
+          mkdir tmp
+          cd tmp
+          curl -fsS https://tools.veracode.com/veracode-cli/install | sh
+          export VERACODE_API_KEY_ID=${{ secrets.VERACODE_API_ID }}
+          export VERACODE_API_KEY_SECRET=${{ secrets.VERACODE_API_KEY }}
+          ls -la
+          ./veracode scan app --source --type directory --format table -o IssuesSource.txt
+          ./veracode sbom --source veracodedemolabs/veracodedemolabs/verademo-java-github:latest --type image --format table -o SBOM.txt
+    # Store security artifacts
+      - name: Upload security artifacts
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: SecurityArtifacts
+          path: ./tmp/*.txt
