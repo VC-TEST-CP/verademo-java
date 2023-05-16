@@ -116,6 +116,7 @@ jobs:
   Container-Inspection-SBOM:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Veracode Container Scanner
         run: |
           mkdir tmp
@@ -124,7 +125,7 @@ jobs:
           export VERACODE_API_KEY_ID=${{ secrets.VERACODE_API_ID }}
           export VERACODE_API_KEY_SECRET=${{ secrets.VERACODE_API_KEY }}
           ls -la
-          ./veracode scan app --source --type directory --format table -o IssuesSource.txt
+          ./veracode scan app --source ./app --type directory --format table -o IssuesSource.txt
           ./veracode sbom --source veracodedemolabs/veracodedemolabs/verademo-java-github:latest --type image --format table -o SBOM.txt
     # Store security artifacts
       - name: Upload security artifacts
