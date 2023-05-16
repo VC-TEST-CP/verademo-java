@@ -36,7 +36,7 @@ jobs:
          java -jar vosp-api-wrappers-java-22.5.10.0.jar 
          -vid $vid
          -vkey $vkey 
-         -appname PetStoreAPI-Github
+         -appname VeraDemo-Java-GitHub
          -action UploadAndScan
          -createprofile true
          -criticality Medium
@@ -55,7 +55,7 @@ jobs:
          java -jar vosp-api-wrappers-java-22.5.10.0.jar 
          -vid $vid
          -vkey $vkey 
-         -appname PetStoreAPI-Github
+         -appname VeraDemo-Java-GitHub
          -action UploadAndScan
          -createprofile false
          -createsandbox true
