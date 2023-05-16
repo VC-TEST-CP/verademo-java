@@ -40,7 +40,7 @@ jobs:
          -action UploadAndScan
          -createprofile true
          -criticality Medium
-         -version $CODEBUILD_BUILD_ID
+         -version ${{ github.run_id }}
          -teams ClintPollock-DemoApps2023 
          -filepath app/target/verademo.war
         continue-on-error: true
@@ -61,7 +61,7 @@ jobs:
          -createsandbox true
          -sandboxname DailyBuild
          -criticality Medium
-         -version $CODEBUILD_BUILD_ID
+         -version ${{ github.run_id }}
          -teams ClintPollock-DemoApps2023 
          -filepath app/target/verademo.war
         continue-on-error: true
