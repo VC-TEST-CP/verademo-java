@@ -123,10 +123,10 @@ jobs:
           cd tmp
           curl -fsS https://tools.veracode.com/veracode-cli/install | sh
           export VERACODE_API_KEY_ID=${{ secrets.VERACODE_API_ID }}
-          export VERACODE_API_KEY_SECRET=${{ secrets.VERACODE_API_KEY }}
-          ls -la
+          export VERACODE_API_KEY_SECRET=${{ secrets.VERACODE_API_KEY }}       
           ./veracode scan app --source ./app --type directory --format table -o IssuesSource.txt
-          ./veracode sbom --source veracodedemolabs/veracodedemolabs/verademo-java-github:latest --type image --format table -o SBOM.txt
+          ./veracode sbom --source veracodedemolabs/verademo-java-github:latest --type image --format table -o SBOM.txt
+          ls -la
     # Store security artifacts
       - name: Upload security artifacts
         uses: actions/upload-artifact@v3.1.0
