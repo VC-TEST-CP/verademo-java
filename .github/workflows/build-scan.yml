@@ -90,8 +90,8 @@ jobs:
     steps:            
       - uses: actions/checkout@v2
       
-# Update the DAST Scan Name to be uniuqe using SED command         
-      - name: Update DAST config file with uniuqe scan name
+# Update the DAST Scan Name to be unique using SED command         
+      - name: Update DAST config file with unique scan name
         run: |
          NOW=$(date +"%m-%d-%Y-%T")
          sed -i 's/VeraDemo-Java-GitHub/VeraDemo-Java-GitHub-'${NOW}'/g' vc-dast-config.json
