@@ -65,10 +65,13 @@ jobs:
          -teams ClintPollock-DemoApps2023 
          -filepath app/target/verademo.war
         continue-on-error: true
-        
+
+# Use SCA Agent to scan repo and container
   SCA-Agent-Scan:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
 # Scan the repo with SCA Agent
       - name: SCA Agent Repo Scan
         env: 
