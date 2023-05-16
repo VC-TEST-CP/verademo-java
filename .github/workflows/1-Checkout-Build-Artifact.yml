@@ -23,44 +23,59 @@ jobs:
       - name: Build with Maven
         working-directory: ./app/
         run: mvn clean install
-    
-# Use the UploadAndScan action to submit the artifact for scanning for Policy
-      - name: Veracode Upload and Scan Action Step - Policy
-        uses: veracode/veracode-uploadandscan-action@master
-        id: upload_and_scan_policy
-        with:
-          appname: 'VeraDemoJava-GitHub'
-          createprofile: true
-          version: '${{ github.run_id }}'
-          criticality: High
-          filepath: 'app/target/verademo.war'
-          vid: '${{ secrets.VERACODE_API_ID }}'
-          vkey: '${{ secrets.VERACODE_API_KEY }}'
-          teams: 'ClintPollock-DemoApps2023'
+
+      - name: Download Veracode Wrapper
+        run: curl -O https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/22.5.10.0/vosp-api-wrappers-java-22.5.10.0.jar
+
+# Use the UploadAndScan action to submit the artifact for scanning for Policy      
+      - name: Submit Policy scan
+        env: 
+          vid: ${{ secrets.VERACODE_API_ID }}
+          vkey: ${{ secrets.VERACODE_API_KEY }}
+        run: >
+         java -jar vosp-api-wrappers-java-22.5.10.0.jar 
+         -vid $vid
+         -vkey $vkey 
+         -appname PetStoreAPI-Github
+         -action UploadAndScan
+         -createprofile true
+         -criticality Medium
+         -version $CODEBUILD_BUILD_ID
+         -teams ClintPollock-DemoApps2023 
+         -filepath app/target/verademo.war
         continue-on-error: true
 
-# Use the UploadAndScan action to submit the artifact for scanning for SandBox
-      - name: Veracode Upload and Scan Action Step - Sandbox
-        uses: veracode/veracode-uploadandscan-action@master
-        id: upload_and_scan_sandbox
-        with:
-          appname: 'VeraDemoJava-GitHub'
-          createprofile: false
-          createsandbox: true
-          sandboxname: DailyBuild
-          version: '${{ github.run_id }}'
-          criticality: High
-          filepath: 'app/target/verademo.war'
-          vid: '${{ secrets.VERACODE_API_ID }}'
-          vkey: '${{ secrets.VERACODE_API_KEY }}'
-          teams: 'ClintPollock-DemoApps2023'
-        continue-on-error: true
 
+# Use the UploadAndScan action to submit the artifact for scanning for Sandbox     
+      - name: Submit Sandbox scan
+        env: 
+          vid: ${{ secrets.VERACODE_API_ID }}
+          vkey: ${{ secrets.VERACODE_API_KEY }}
+        run: >
+         java -jar vosp-api-wrappers-java-22.5.10.0.jar 
+         -vid $vid
+         -vkey $vkey 
+         -appname PetStoreAPI-Github
+         -action UploadAndScan
+         -createprofile false
+         -createsandbox true
+         -sandboxname DailyBuild
+         -criticality Medium
+         -version $CODEBUILD_BUILD_ID
+         -teams ClintPollock-DemoApps2023 
+         -filepath app/target/verademo.war
+        continue-on-error: true
+        
+  SCA-Agent-Scan:
+    runs-on: ubuntu-latest
+    steps:
+# Scan the repo with SCA Agent
       - name: SCA Agent Repo Scan
         env: 
           SRCCLR_API_TOKEN: ${{ secrets.SRCCLR_API_TOKEN }}
         run: curl -sSL https://download.sourceclear.com/ci.sh | sh -s scan app
-                
+
+# Scan the container repo with SCA Agent                
       - name: SCA Agent Container Scan
         env: 
           SRCCLR_API_TOKEN: ${{ secrets.SRCCLR_API_TOKEN }}
@@ -70,7 +85,6 @@ jobs:
   Submit-DAST-Scan:
     runs-on: ubuntu-latest
     steps:            
-# Checkout
       - uses: actions/checkout@v2
       
 # Update the DAST Scan Name to be uniuqe using SED command         
