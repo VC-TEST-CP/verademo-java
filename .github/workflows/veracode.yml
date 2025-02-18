@@ -24,4 +24,4 @@ jobs:
       - name: SAST Scan
         continue-on-error: true
         run: |
-         ./veracode static scan ./verademo.war --summary-output sast-summary.txt
+         ./veracode static scan /home/runner/work/verademo-java/verademo-java/verademo.war --summary-output sast-summary.txt
