@@ -23,8 +23,5 @@ jobs:
 
       - name: SAST Scan
         continue-on-error: true
-        env:
-         VERACODE_API_KEY_ID: ${{ secrets.VERACODE_API_KEY_ID }}
-         VERACODE_API_KEY_SECRET: ${{ secrets.VERACODE_API_KEY_SECRET }}
         run: |
          ./veracode static scan ./verademo.war --summary-output sast-summary.txt
